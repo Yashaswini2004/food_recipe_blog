@@ -17,7 +17,7 @@ const userSignup=async(req,res)=>{
         email,password:hasPswd
     })
     let token=jwt.sign({email,id:newUser._id},process.env.SECRET_KEY)
-    return res.status(200).json({token,newUser})
+    return res.status(200).json({token,user:newUser})
 }
 const userLogin=async(req,res)=>{
     const {email,password}=req.body;

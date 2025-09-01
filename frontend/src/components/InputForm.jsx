@@ -1,11 +1,20 @@
 import React, { useState } from 'react'
-
-function InputForm() {
+import axios from 'axios';
+function InputForm({setIsOpen}) {
     const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");
     const [isSignUp,setIsSignUp]=useState(false);
-    const handleSubmit=(e)=>{
+    const [error,setError]=useState("")
+    const handleSubmit=async(e)=>{
         e.preventDefault();
+        let endpoint=(isSignUp) ? "signUp":"login";
+        await axios.post(`http://localhost:5000/${endpoint}`,{email,password})
+        .then((res)=>{
+          localStorage.setItem("token",res.data.token)
+          localStorage.setItem("user",JSON.stringify(res.data.user))
+          setIsOpen()
+        })
+        .catch(data=>setError(data.response?.data?.error))
     }
   return (
     <>
@@ -19,7 +28,9 @@ function InputForm() {
              <input type="password" className='input' onChange={(e)=>setPassword(e.target.value)} required />
           </div>
           <button type='submit'>{isSignUp?"Sign Up":"Login"}</button><br /><br />
-          <p onClick={()=>setIsSignUp(true)}>{isSignUp ? "Already have an account":"Create new account"}</p>
+          {(error!="") && <h6 className='error'>{error}</h6>}
+          <p onClick={()=>setIsSignUp(!isSignUp)}>{isSignUp ? "Already have an account":"Create new account"}</p>
+
        </form>
     </>
   )
