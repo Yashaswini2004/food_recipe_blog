@@ -32,7 +32,8 @@ const addRecipes = async (req, res) => {
       title,
       ingredients,
       instruction,
-      time
+      time,
+      coverImage:req.file.filename
     });
 
     return res.status(201).json(newRecipe);

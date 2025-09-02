@@ -5,7 +5,9 @@ function AddFoodRecipe() {
     const [recipeData,setRecipeData]=useState({})
     const navigate=useNavigate();
     const onHandleChange=(e)=>{
+      if(e.target.files && e.target.files[0]){
       console.log(e.target.files[0])
+      }
       let val=(e.target.name==="ingredients")?e.target.value.split(","):(e.target.name==="coverImage")?e.target.files[0]:e.target.value;
        setRecipeData(pre=>({...pre,[e.target.name]:val}))
     }
