@@ -5,13 +5,18 @@ function AddFoodRecipe() {
     const [recipeData,setRecipeData]=useState({})
     const navigate=useNavigate();
     const onHandleChange=(e)=>{
-      let val=(e.target.name==="ingredients")?e.target.value.split(","):e.target.value;
+      console.log(e.target.files[0])
+      let val=(e.target.name==="ingredients")?e.target.value.split(","):(e.target.name==="coverImage")?e.target.files[0]:e.target.value;
        setRecipeData(pre=>({...pre,[e.target.name]:val}))
     }
     const onHandleSubmit=async(e)=>{
         e.preventDefault();
         console.log(recipeData);
-        await axios.post("http://localhost:5000/recipe",recipeData)
+        await axios.post("http://localhost:5000/recipe",recipeData,{
+          headers:{
+            'Content-Type':'multipart/form-data'
+          }
+        })
         .then(navigate("/"))
     }
   return (
@@ -36,7 +41,7 @@ function AddFoodRecipe() {
             </div>
             <div className="form-control">
                 <label htmlFor="">Recipe Image</label>
-                <input type="file" className='input' name="coverImage"  />
+                <input type="file" className='input' name="coverImage" onChange={onHandleChange}  />
             </div>
             <button type="submit">Add Recipe</button>
         </form>
